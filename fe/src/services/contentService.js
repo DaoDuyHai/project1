@@ -1,7 +1,6 @@
 import { request, getFullImageUrl, simulatedFetch } from './apiClient';
 import { 
   mockWhyChooseUs, 
-  mockTestimonials, 
   mockClients, 
   mockCompanyInfo 
 } from '../data/mockData';
@@ -12,15 +11,15 @@ import {
 export async function getTestimonials() {
   try {
     const res = await request('/api/testimonials');
-    const list = res.data || (Array.isArray(res) ? res : mockTestimonials);
+    const list = res.data || (Array.isArray(res) ? res : []);
 
     return list.map(item => ({
       ...item,
       avatar: getFullImageUrl(item.avatar)
     }));
   } catch (err) {
-    console.warn("[API] Không kết nối được Backend /api/testimonials, dùng mockData:", err.message);
-    return mockTestimonials;
+    console.warn("[API] Không kết nối được Backend /api/testimonials:", err.message);
+    return [];
   }
 }
 

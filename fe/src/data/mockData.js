@@ -1,38 +1,16 @@
 // ==============================================================================
-// MOCK DATA TẬP TRUNG (CHUẨN HÓA ĐỊNH HƯỚNG KẾT NỐI RESTFUL BACKEND)
+// MOCK DATA TẬP TRUNG (DÀNH CHO CÁC MODULE GIAO DIỆN CHƯA CÓ BACKEND)
+// Các module Categories, Products, News, Testimonials, Quotes ĐÃ CHUYỂN HOÀN TOÀN SANG BACKEND .NET
 // ==============================================================================
 
-// 1. Assets Logo & Icons
+// 1. Assets Logo & Icons hệ thống
 import logoImg from '../assets/logo-tl.png';
 import iconQuality from '../assets/icon-quality.png';
 import iconPrice from '../assets/icon-price.png';
 import iconConsult from '../assets/icon-consult.png';
 import iconDelivery from '../assets/icon-delivery.png';
 
-// 2. Assets 15 Sản phẩm Trang chủ
-import p1 from '../assets/products/p1.png';
-import p2 from '../assets/products/p2.png';
-import p3 from '../assets/products/p3.png';
-import p4 from '../assets/products/p4.png';
-import p5 from '../assets/products/p5.png';
-import p6 from '../assets/products/p6.png';
-import p7 from '../assets/products/p7.png';
-import p8 from '../assets/products/p8.png';
-import p9 from '../assets/products/p9.png';
-import p10 from '../assets/products/p10.png';
-import p11 from '../assets/products/p11.png';
-import p12 from '../assets/products/p12.png';
-import p13 from '../assets/products/p13.png';
-import p14 from '../assets/products/p14.png';
-import p15 from '../assets/products/p15.png';
-
-// 3. Assets Khách hàng & Tin tức & Đối tác
-import customerAvatar from '../assets/customer-avatar.png';
-import newsFeatured from '../assets/news-featured.png';
-import news1 from '../assets/news-1.png';
-import news2 from '../assets/news-2.png';
-import news3 from '../assets/news-3.png';
-
+// 2. Assets Đối tác & Khách hàng
 import clientAvac from '../assets/client-avac.png';
 import clientYsl from '../assets/client-ysl.jpg';
 import clientVnexpress from '../assets/client-vnexpress.jpg';
@@ -40,7 +18,7 @@ import clientDior from '../assets/client-dior.jpg';
 import clientBank1 from '../assets/client-bank1.jpg';
 import clientBank2 from '../assets/client-bank2.jpg';
 
-// 4. Assets Trang Chi Tiết Sản Phẩm (Desktop 2)
+// 3. Assets Chi tiết sản phẩm (Perks & Related)
 import detailMain from '../assets/detail/detail-main.png';
 import detailThumb1 from '../assets/detail/detail-thumb-1.png';
 import detailThumb2 from '../assets/detail/detail-thumb-2.png';
@@ -54,42 +32,7 @@ import related3 from '../assets/detail/related-3.png';
 import related4 from '../assets/detail/related-4.png';
 
 /**
- * 1. Danh mục dịch vụ in ấn
- */
-export const mockCategories = [
-  { id: 'all', name: "Tất cả", slug: "tat-ca" },
-  { id: 'digital', name: "In kỹ thuật số", slug: "in-ky-thuat-so" },
-  { id: 'large-format', name: "In khổ lớn", slug: "in-kho-lon" },
-  { id: 'photocopy', name: "Photocopy", slug: "photocopy" },
-  { id: 'school', name: "Khối trường học", slug: "khoi-truong-hoc" },
-  { id: 'scan', name: "Scan", slug: "scan" },
-  { id: 'finishing', name: "Gia công sau in", slug: "gia-cong-sau-in" },
-  { id: 'carbon', name: "In Hóa đơn Cacbon", slug: "in-hoa-don-cacbon" },
-];
-
-/**
- * 2. Lưới 15 thẻ sản phẩm Trang chủ
- */
-export const mockProducts = [
-  { id: 1, title: "IN GIẤY MỜI - THIỆP CƯỚI", image: p1, categoryId: 'all', price: 115000, slug: 'danh-thiep-in-giay-couche-bristol-300gsm' },
-  { id: 2, title: "IN GIẤY MỜI - THIỆP CƯỚI", image: p2, categoryId: 'all', price: 150000, slug: 'in-giay-moi-thiep-cuoi-2' },
-  { id: 3, title: "IN GIẤY MỜI - THIỆP CƯỚI", image: p3, categoryId: 'all', price: 95000, slug: 'in-giay-moi-thiep-cuoi-3' },
-  { id: 4, title: "IN GIẤY MỜI - THIỆP CƯỚI", image: p4, categoryId: 'all', price: 210000, slug: 'in-giay-moi-thiep-cuoi-4' },
-  { id: 5, title: "IN GIẤY MỜI - THIỆP CƯỚI", image: p5, categoryId: 'all', price: 85000, slug: 'in-giay-moi-thiep-cuoi-5' },
-  { id: 6, title: "IN GIẤY MỜI - THIỆP CƯỚI", image: p6, categoryId: 'all', price: 45000, slug: 'in-giay-moi-thiep-cuoi-6' },
-  { id: 7, title: "IN GIẤY MỜI - THIỆP CƯỚI", image: p7, categoryId: 'all', price: 350000, slug: 'in-giay-moi-thiep-cuoi-7' },
-  { id: 8, title: "IN GIẤY MỜI - THIỆP CƯỚI", image: p8, categoryId: 'all', price: 70000, slug: 'in-giay-moi-thiep-cuoi-8' },
-  { id: 9, title: "IN GIẤY MỜI - THIỆP CƯỚI", image: p9, categoryId: 'all', price: 65000, slug: 'in-giay-moi-thiep-cuoi-9' },
-  { id: 10, title: "IN GIẤY MỜI - THIỆP CƯỚI", image: p10, categoryId: 'all', price: 180000, slug: 'in-giay-moi-thiep-cuoi-10' },
-  { id: 11, title: "IN GIẤY MỜI - THIỆP CƯỚI", image: p11, categoryId: 'all', price: 290000, slug: 'in-giay-moi-thiep-cuoi-11' },
-  { id: 12, title: "IN GIẤY MỜI - THIỆP CƯỚI", image: p12, categoryId: 'all', price: 120000, slug: 'in-giay-moi-thiep-cuoi-12' },
-  { id: 13, title: "IN GIẤY MỜI - THIỆP CƯỚI", image: p13, categoryId: 'all', price: 160000, slug: 'in-giay-moi-thiep-cuoi-13' },
-  { id: 14, title: "IN GIẤY MỜI - THIỆP CƯỚI", image: p14, categoryId: 'all', price: 135000, slug: 'in-giay-moi-thiep-cuoi-14' },
-  { id: 15, title: "IN GIẤY MỜI - THIỆP CƯỚI", image: p15, categoryId: 'all', price: 55000, slug: 'in-giay-moi-thiep-cuoi-15' },
-];
-
-/**
- * 3. Dữ liệu Chi tiết Sản phẩm (Desktop 2 - Figma)
+ * 1. Dữ liệu tĩnh bổ trợ Trang Chi Tiết Sản Phẩm (Tabs, Perks, Related)
  */
 export const mockProductDetail = {
   id: 1,
@@ -144,7 +87,7 @@ export const mockProductDetail = {
       title: "THÔNG TIN SẢN PHẨM",
       heading: "MÔ TẢ SẢN PHẨM",
       content:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        "Quy trình in ấn sử dụng công nghệ in offset nhiều màu hoặc in kỹ thuật số hiện đại, cho chất lượng bản in sắc nét, màu sắc tươi sáng chuẩn dải màu CMYK.",
     },
     {
       id: "certificate",
@@ -211,93 +154,37 @@ export const mockProductDetail = {
 };
 
 /**
- * 4. 4 Lợi thế nổi bật (Vì sao lựa chọn chúng tôi)
+ * 2. 4 Lợi thế nổi bật (Vì sao lựa chọn chúng tôi)
  */
 export const mockWhyChooseUs = [
   {
     id: 1,
     icon: iconQuality,
     title: "Chất lượng uy tín",
-    desc: "Lorem ipsum dolor sit amet, consectetur",
+    desc: "Công nghệ in offset và kỹ thuật số hiện đại chuẩn quốc tế.",
   },
   {
     id: 2,
     icon: iconPrice,
     title: "Giá cả cạnh tranh",
-    desc: "Lorem ipsum dolor sit amet, consectetur",
+    desc: "Giá gốc tận xưởng, không qua trung gian thương mại.",
   },
   {
     id: 3,
     icon: iconConsult,
     title: "Tư vấn tận tâm",
-    desc: "Lorem ipsum dolor sit amet, consectetur",
+    desc: "Đội ngũ kỹ thuật viên giàu kinh nghiệm hỗ trợ 24/7.",
   },
   {
     id: 4,
     icon: iconDelivery,
     title: "Giao hàng nhanh chóng",
-    desc: "Lorem ipsum dolor sit amet, consectetur",
+    desc: "Đảm bảo đúng tiến độ, hỗ trợ giao hỏa tốc trong ngày.",
   },
 ];
 
 /**
- * 5. Đánh giá của khách hàng (Testimonials)
- */
-export const mockTestimonials = [
-  {
-    id: 1,
-    name: "Chị Nguyễn Thị Mai",
-    role: "TGĐ công ty Thương mại & Dịch vụ Baobab",
-    avatar: customerAvatar,
-    quote: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum d",
-  },
-  {
-    id: 2,
-    name: "Anh Trần Minh Tuấn",
-    role: "Giám đốc Marketing - Tập đoàn Nova",
-    avatar: customerAvatar,
-    quote: "Dịch vụ in ấn tại Thắng Lợi luôn làm tôi hài lòng về cả tốc độ lẫn độ sắc nét của màu sắc. Đội ngũ hỗ trợ nhiệt tình, tư vấn chất liệu giấy cực kỳ chuẩn xác cho từng loại ấn phẩm của công ty chúng tôi.",
-  },
-];
-
-/**
- * 6. Tin tức mới nhất (1 bài lớn + 3 bài nhỏ)
- */
-export const mockNews = {
-  featured: {
-    id: 'featured-1',
-    image: newsFeatured,
-    title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut la",
-    excerpt: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut la...",
-    createdAt: "2026-11-25",
-  },
-  articles: [
-    {
-      id: 1,
-      image: news1,
-      title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor ...",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor",
-      createdAt: "2026-11-24",
-    },
-    {
-      id: 2,
-      image: news2,
-      title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor ...",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor",
-      createdAt: "2026-11-23",
-    },
-    {
-      id: 3,
-      image: news3,
-      title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor ...",
-      desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor",
-      createdAt: "2026-11-22",
-    },
-  ],
-};
-
-/**
- * 7. Khách hàng đối tác
+ * 3. Khách hàng đối tác
  */
 export const mockClients = [
   { id: 1, name: "AVAC", logo: clientAvac },
@@ -309,14 +196,14 @@ export const mockClients = [
 ];
 
 /**
- * 8. Thông tin doanh nghiệp (Header & Footer)
+ * 4. Thông tin doanh nghiệp (Header & Footer)
  */
 export const mockCompanyInfo = {
   name: "CÔNG TY CP TM VÀ DV IN ẤN THẮNG LỢI",
   logo: logoImg,
-  address: "Lorem ipsum dolor sit amet, consectetur adipiscing elit dolor sit ame",
-  hotline: "0123.456.789",
-  email: "suppor@info.com",
+  address: "Số 53-A22 Khu đô thị Geleximco, Lê Trọng Tấn, Hà Đông, Hà Nội",
+  hotline: "091 8585 505",
+  email: "support@inanthangloi.vn",
   copyright: "© 2026 In Thắng Lợi. Designed by VicoGroup. All Rights Reserved.",
   quickLinks: [
     { label: "Dịch Vụ In & Thiết Kế", href: "#dich-vu" },

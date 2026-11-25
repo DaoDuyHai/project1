@@ -1,5 +1,5 @@
 import { request, getFullImageUrl } from './apiClient';
-import { mockProducts, mockCategories, mockProductDetail } from '../data/mockData';
+import { mockProductDetail } from '../data/mockData';
 
 /**
  * 1. Lấy danh sách danh mục (Categories)
@@ -7,10 +7,10 @@ import { mockProducts, mockCategories, mockProductDetail } from '../data/mockDat
 export async function getCategories() {
   try {
     const data = await request('/api/categories');
-    return Array.isArray(data) ? data : (data.data || mockCategories);
+    return Array.isArray(data) ? data : (data.data || []);
   } catch (err) {
-    console.warn("[API] Không kết nối được Backend /api/categories, dùng dữ liệu dự phòng:", err.message);
-    return mockCategories;
+    console.warn("[API] Không kết nối được Backend /api/categories:", err.message);
+    return [];
   }
 }
 
@@ -34,19 +34,15 @@ export async function getProducts(params = {}) {
     }
 
     const res = await request(`/api/products?${query.toString()}`);
-    const list = res.data || (Array.isArray(res) ? res : mockProducts);
+    const list = res.data || (Array.isArray(res) ? res : []);
 
     return list.map(item => ({
       ...item,
       image: getFullImageUrl(item.image)
     }));
   } catch (err) {
-    console.warn("[API] Không kết nối được Backend /api/products, dùng dữ liệu dự phòng:", err.message);
-    let list = [...mockProducts];
-    if (params.categoryId && params.categoryId !== 'all') {
-      list = list.filter(item => String(item.categoryId) === String(params.categoryId));
-    }
-    return list;
+    console.warn("[API] Không kết nối được Backend /api/products:", err.message);
+    return [];
   }
 }
 
