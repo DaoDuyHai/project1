@@ -1,0 +1,53 @@
+# ==========================================
+# 1. Documents & Extra Files (Tài liệu & file ghi chú tạm)
+# ==========================================
+docs/
+*.docx
+*.pdf
+DOC_REVIEW_KIEN_THUC_HOM_NAY.md
+TONG_KET_KIEN_THUC_NET_CHO_NODEJS_DEV.md
+fe/README.md
+
+# ==========================================
+# 2. Secrets & Credentials (Bảo mật tài khoản, mật khẩu)
+# ==========================================
+.env
+*.env
+be/ThangLoiPrinting.Api/appsettings.json
+be/ThangLoiPrinting.Api/appsettings.*.json
+!be/ThangLoiPrinting.Api/appsettings.example.json
+
+# ==========================================
+# 3. .NET & Visual Studio
+# ==========================================
+.vs/
+**/.vs/
+**/bin/
+**/obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# ==========================================
+# 3. Node.js & Frontend (React / Vite)
+# ==========================================
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+build/
+**/build/
+.env.local
+.env.*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ==========================================
+# 4. OS & Temporary
+# ==========================================
+.DS_Store
+Thumbs.db
+*.log
