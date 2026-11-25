@@ -1,3 +1,4 @@
+using ThangLoiPrinting.Api.Middlewares;
 using ThangLoiPrinting.Infrastructure;
 using ThangLoiPrinting.Infrastructure.Data;
 
@@ -23,6 +24,9 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// 4. Đăng ký Middleware xử lý lỗi tập trung ở đầu Pipeline (bọc toàn bộ ứng dụng)
+app.UseMiddleware<ExceptionMiddleware>();
+
 // Phục vụ file tĩnh trong thư mục wwwroot (ảnh, file upload...)
 app.UseStaticFiles();
 
@@ -41,27 +45,23 @@ app.MapGet("/", () => Results.Ok(new
 // Endpoint 2: Kiểm tra kết nối trực tiếp tới SQL Server trên Docker
 app.MapGet("/api/health/db", async (AppDbContext dbContext) =>
 {
-    try
-    {
-        // Tự động đảm bảo Database và các Bảng đã tồn tại nếu chưa có
-        await dbContext.Database.EnsureCreatedAsync();
-        bool canConnect = await dbContext.Database.CanConnectAsync();
+    // Tự động đảm bảo Database và các Bảng đã tồn tại nếu chưa có
+    await dbContext.Database.EnsureCreatedAsync();
+    bool canConnect = await dbContext.Database.CanConnectAsync();
 
-        return Results.Ok(new
-        {
-            success = canConnect,
-            database = "SQL Server on Docker (localhost,1433)",
-            databaseName = "ThangLoiPrintingDb",
-            message = canConnect ? "Kết nối SQL Server Docker thành công 100%!" : "Không thể kết nối tới database"
-        });
-    }
-    catch (Exception ex)
+    return Results.Ok(new
     {
-        return Results.Problem(
-            detail: ex.Message,
-            title: "Lỗi kết nối SQL Server Docker"
-        );
-    }
+        success = canConnect,
+        database = "SQL Server on Docker (localhost,1433)",
+        databaseName = "ThangLoiPrintingDb",
+        message = canConnect ? "Kết nối SQL Server Docker thành công 100%!" : "Không thể kết nối tới database"
+    });
+});
+
+// Endpoint 3: Endpoint thử nghiệm cơ chế bắt lỗi tập trung (Test ExceptionMiddleware)
+app.MapGet("/api/test-error", () =>
+{
+    throw new InvalidOperationException("Đây là lỗi thử nghiệm! ExceptionMiddleware đã tóm gọn thành công.");
 });
 
 app.Run();
