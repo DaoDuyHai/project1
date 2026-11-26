@@ -11,5 +11,8 @@ public class Quote
     public int Quantity { get; set; } = 100;                 // Số lượng cần in
     public string? Notes { get; set; }                       // Ghi chú quy cách in ấn
     public string Status { get; set; } = "Pending";          // Trạng thái: Pending, Contacted, Done
+    public int? HandledByUserId { get; set; }                // Nhân viên/Admin đang xử lý đơn này
+    public User? HandledByUser { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get; set; }
 }

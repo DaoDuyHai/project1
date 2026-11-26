@@ -18,7 +18,7 @@ export default function NewsSection() {
 
   if (!newsData) {
     return (
-      <div className="w-full max-w-[1140px] mx-auto py-12 text-center text-xs text-gray-400">
+      <div className="w-full max-w-[1140px] mx-auto px-4 mt-20 min-h-[520px] flex items-center justify-center text-xs text-gray-400">
         Đang tải tin tức...
       </div>
     );

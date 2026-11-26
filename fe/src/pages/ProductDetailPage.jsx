@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import Breadcrumb from '../components/detail/Breadcrumb';
 import ProductGallery from '../components/detail/ProductGallery';
 import ProductInfo from '../components/detail/ProductInfo';
@@ -57,9 +57,9 @@ export default function ProductDetailPage() {
       <div className="w-full min-h-[50vh] flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-xl font-bold text-gray-700">Không tìm thấy sản phẩm</h2>
-          <a href="/" className="mt-4 inline-block text-brand-primary underline text-sm">
+          <Link to="/" className="mt-4 inline-block text-brand-primary underline text-sm">
             Quay lại trang chủ
-          </a>
+          </Link>
         </div>
       </div>
     );

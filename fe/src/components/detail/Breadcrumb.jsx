@@ -15,7 +15,10 @@ export default function Breadcrumb({ items = [] }) {
     { label: "In Card Visit", href: null, current: true },
   ];
 
-  const breadcrumbs = items.length > 0 ? items : defaultItems;
+  const rawItems = items.length > 0 ? items : defaultItems;
+  const breadcrumbs = rawItems.filter(
+    (crumb, idx) => !(idx === 0 && crumb.label?.trim().toLowerCase() === 'trang chủ')
+  );
 
   return (
     <nav aria-label="Breadcrumb" className="w-full py-4 text-xs select-none">

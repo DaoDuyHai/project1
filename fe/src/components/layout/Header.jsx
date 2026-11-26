@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ChevronDown, Menu, X } from 'lucide-react';
+import { getCompanyInfo } from '../../services/contentService';
+import { getCategories } from '../../services/productService';
+import { scrollToTargetId } from '../common/ScrollToTop';
 
 // Import chính xác các file ảnh asset bạn đã xuất từ Figma:
 import logoImg from '../../assets/logo-tl.png';
@@ -9,31 +12,80 @@ import searchIcon from '../../assets/search-icon.png';
 import headphoneIcon from '../../assets/headphone-icon.png';
 
 export default function Header() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [searchText, setSearchText] = useState('');
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
+  const [company, setCompany] = useState(null);
+  const [categories, setCategories] = useState([]);
 
-  // Danh sách menu chính xác theo Figma:
-  // [Home Icon] | GIỚI THIỆU | DỊCH VỤ IN & THIẾT KẾ | HỆ THỐNG MÁY MÓC | BẢNG GIÁ | TIN TỨC | LIÊN HỆ | [Search Icon]
+  useEffect(() => {
+    getCompanyInfo().then(data => setCompany(data));
+    getCategories().then(data => {
+      if (Array.isArray(data)) setCategories(data);
+    });
+  }, []);
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    const q = searchText.trim();
+    setSearchOpen(false);
+    setMobileMenuOpen(false);
+    if (q) {
+      navigate(`/?keyword=${encodeURIComponent(q)}#dich-vu`);
+    } else {
+      navigate('/#dich-vu');
+    }
+    if (location.pathname === '/') {
+      setTimeout(() => scrollToTargetId('dich-vu'), 50);
+    }
+  };
+
+  // Đảm bảo bấm cùng 1 nút nhiều lần liên tiếp vẫn cuộn chuẩn xác tới đúng vị trí
+  const handleHomeOrHashClick = (e, hashId = null, keepRouterNav = false) => {
+    setMobileMenuOpen(false);
+    setServicesDropdownOpen(false);
+
+    if (!hashId) {
+      if (location.pathname === '/') {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      return;
+    }
+
+    // Nút LIÊN HỆ luôn cuộn xuống Footer ngay tại trang đang đứng
+    if (hashId === 'lien-he') {
+      e.preventDefault();
+      scrollToTargetId('lien-he');
+      return;
+    }
+
+    // Nếu đang ở trang chủ và không cần đổi query (?categoryId=), cuộn trực tiếp không làm giật Router
+    if (location.pathname === '/' && !keepRouterNav) {
+      e.preventDefault();
+      scrollToTargetId(hashId);
+    }
+  };
+
+  const hotlineText = company?.hotline || '0123.456.789';
+  const hotlineHref = `tel:${hotlineText.replace(/[^0-9+]/g, '')}`;
+  const sloganText = company?.slogan || 'Professional Printing Solutions';
+  const shortNameText = company?.shortName || 'THẮNG LỢI';
+
   const navLinks = [
-    { name: 'GIỚI THIỆU', href: '#gioi-thieu' },
-    { 
-      name: 'DỊCH VỤ IN & THIẾT KẾ', 
-      href: '#dich-vu',
+    { name: 'GIỚI THIỆU', to: '/#gioi-thieu' },
+    {
+      name: 'DỊCH VỤ IN & THIẾT KẾ',
+      to: '/#dich-vu',
       hasDropdown: true,
-      subItems: [
-        'Ấn phẩm bao bì (Hộp giấy, Túi giấy)',
-        'Ấn phẩm văn phòng (Namecard, Folder, Tiêu đề thư)',
-        'Bảng hiệu quảng cáo',
-        'Tem nhãn decal',
-        'Quà tặng doanh nghiệp',
-        'In lịch Tết 2027',
-      ]
     },
-    { name: 'HỆ THỐNG MÁY MÓC', href: '#he-thong-may-moc' },
-    { name: 'BẢNG GIÁ', href: '#bang-gia' },
-    { name: 'TIN TỨC', href: '#tin-tuc' },
-    { name: 'LIÊN HỆ', href: '#lien-he' },
+    { name: 'HỆ THỐNG MÁY MÓC', to: '/he-thong-may-moc' },
+    { name: 'BẢNG GIÁ', to: '/bang-gia' },
+    { name: 'TIN TỨC', to: '/tin-tuc' },
+    { name: 'LIÊN HỆ', to: '/#lien-he' },
   ];
 
   return (
@@ -54,7 +106,7 @@ export default function Header() {
           <div className="w-full max-w-[1130px] mx-auto h-full flex items-center justify-between">
             
             {/* CỘT TRÁI: LOGO & TÊN CÔNG TY */}
-            <Link to="/" className="flex items-center gap-3.5 group select-none">
+            <Link to="/" onClick={(e) => handleHomeOrHashClick(e)} className="flex items-center gap-3.5 group select-none">
               <div className="relative w-14 h-14 flex-shrink-0 flex items-center justify-center">
                 <img 
                   src={logoImg} 
@@ -67,7 +119,7 @@ export default function Header() {
                   CÔNG TY CP TM VÀ DV IN ẤN
                 </span>
                 <span className="text-2xl md:text-[28px] font-black uppercase text-brand-primary tracking-tight leading-none mt-0.5">
-                  THẮNG LỢI
+                  {shortNameText}
                 </span>
               </div>
             </Link>
@@ -78,7 +130,7 @@ export default function Header() {
                 className="font-cursive text-3xl lg:text-[40px] text-brand-primary font-normal tracking-wide select-none drop-shadow-xs"
                 style={{ fontFamily: '"Alex Brush", "Dancing Script", cursive' }}
               >
-                Professional Printing Solutions
+                {sloganText}
               </span>
             </div>
 
@@ -96,10 +148,10 @@ export default function Header() {
                   Hotline:
                 </span>
                 <a 
-                  href="tel:0123456789" 
+                  href={hotlineHref} 
                   className="text-base md:text-lg font-bold text-accent-red hover:underline tracking-wide leading-tight whitespace-nowrap"
                 >
-                  0123.456.789
+                  {hotlineText}
                 </a>
               </div>
 
@@ -135,6 +187,7 @@ export default function Header() {
               {/* 1. Icon Home (ảnh Vector 1 từ Figma) */}
               <Link 
                 to="/" 
+                onClick={(e) => handleHomeOrHashClick(e)}
                 className="flex items-center justify-center hover:opacity-80 transition-opacity"
                 title="Trang chủ"
               >
@@ -146,12 +199,13 @@ export default function Header() {
               </Link>
 
               {/* 2. GIỚI THIỆU */}
-              <a 
-                href="#gioi-thieu"
+              <Link 
+                to="/#gioi-thieu"
+                onClick={(e) => handleHomeOrHashClick(e, 'gioi-thieu')}
                 className="text-[13px] font-semibold tracking-wider text-white/95 hover:text-white transition-colors"
               >
                 GIỚI THIỆU
-              </a>
+              </Link>
 
               {/* 3. DỊCH VỤ IN & THIẾT KẾ */}
               <div 
@@ -159,45 +213,54 @@ export default function Header() {
                 onMouseEnter={() => setServicesDropdownOpen(true)}
                 onMouseLeave={() => setServicesDropdownOpen(false)}
               >
-                <a 
-                  href="#dich-vu"
+                <Link 
+                  to="/#dich-vu"
+                  onClick={(e) => handleHomeOrHashClick(e, 'dich-vu')}
                   className="flex items-center gap-1 text-[13px] font-semibold tracking-wider text-white/95 hover:text-white transition-colors"
                 >
                   DỊCH VỤ IN & THIẾT KẾ
                   <ChevronDown className="w-3.5 h-3.5 opacity-80" />
-                </a>
+                </Link>
 
-                {/* Dropdown danh mục */}
+                {/* Dropdown danh mục động từ Backend */}
                 {servicesDropdownOpen && (
-                  <div className="absolute top-[28px] left-0 w-72 bg-white text-gray-800 shadow-2xl rounded-lg border border-gray-100 py-2 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
-                    {navLinks[1].subItems.map((sub, sIdx) => (
-                      <a
-                        key={sIdx}
-                        href="#dich-vu"
+                  <div className="absolute top-[28px] left-0 w-64 bg-white text-gray-800 shadow-2xl rounded-lg border border-gray-100 py-2 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
+                    <Link
+                      to="/#dich-vu"
+                      onClick={(e) => handleHomeOrHashClick(e, 'dich-vu', true)}
+                      className="block px-4 py-2.5 text-xs font-semibold text-brand-primary hover:bg-purple-50 transition-colors border-b border-gray-50"
+                    >
+                      Tất cả dịch vụ in ấn
+                    </Link>
+                    {categories.map((cat) => (
+                      <Link
+                        key={cat.id}
+                        to={`/?categoryId=${cat.id}#dich-vu`}
+                        onClick={(e) => handleHomeOrHashClick(e, 'dich-vu', true)}
                         className="block px-4 py-2.5 text-xs font-medium text-gray-700 hover:bg-brand-50 hover:text-brand-primary transition-colors border-b border-gray-50 last:border-b-0"
                       >
-                        {sub}
-                      </a>
+                        {cat.name}
+                      </Link>
                     ))}
                   </div>
                 )}
               </div>
 
               {/* 4. HỆ THỐNG MÁY MÓC */}
-              <a 
-                href="#he-thong-may-moc"
+              <Link 
+                to="/he-thong-may-moc"
                 className="text-[13px] font-semibold tracking-wider text-white/95 hover:text-white transition-colors"
               >
                 HỆ THỐNG MÁY MÓC
-              </a>
+              </Link>
 
               {/* 5. BẢNG GIÁ */}
-              <a 
-                href="#bang-gia"
+              <Link 
+                to="/bang-gia"
                 className="text-[13px] font-semibold tracking-wider text-white/95 hover:text-white transition-colors"
               >
                 BẢNG GIÁ
-              </a>
+              </Link>
 
               {/* 6. TIN TỨC */}
               <Link 
@@ -208,18 +271,20 @@ export default function Header() {
               </Link>
 
               {/* 7. LIÊN HỆ */}
-              <a 
-                href="#lien-he"
+              <Link 
+                to="/#lien-he"
+                onClick={(e) => handleHomeOrHashClick(e, 'lien-he')}
                 className="text-[13px] font-semibold tracking-wider text-white/95 hover:text-white transition-colors"
               >
                 LIÊN HỆ
-              </a>
+              </Link>
 
               {/* 8. Icon Search (ảnh Vector 2 từ Figma) */}
               <div className="relative flex items-center">
                 <button 
+                  type="button"
                   onClick={() => setSearchOpen(!searchOpen)}
-                  className="flex items-center justify-center hover:opacity-80 transition-opacity focus:outline-none"
+                  className="flex items-center justify-center hover:opacity-80 transition-opacity focus:outline-none cursor-pointer"
                   title="Tìm kiếm"
                 >
                   <img 
@@ -231,17 +296,28 @@ export default function Header() {
 
                 {/* Search Bar Popup khi click icon kính lúp */}
                 {searchOpen && (
-                  <div className="absolute top-[32px] right-0 w-64 bg-white text-gray-800 p-2 rounded-lg shadow-xl border border-gray-200 z-50 animate-in fade-in slide-in-from-top-2">
+                  <form
+                    onSubmit={handleSearchSubmit}
+                    className="absolute top-[32px] right-0 w-72 bg-white text-gray-800 p-2 rounded-lg shadow-xl border border-gray-200 z-50 animate-in fade-in slide-in-from-top-2"
+                  >
                     <div className="flex items-center gap-2 border border-gray-300 rounded-md px-2 py-1 focus-within:border-brand-primary">
                       <img src={searchIcon} alt="" className="w-3.5 h-3.5 opacity-40" />
                       <input 
                         type="text" 
+                        value={searchText}
+                        onChange={(e) => setSearchText(e.target.value)}
                         placeholder="Tìm kiếm sản phẩm, dịch vụ..."
                         className="w-full text-xs outline-none text-gray-700 placeholder-gray-400"
                         autoFocus
                       />
+                      <button
+                        type="submit"
+                        className="text-[11px] font-semibold text-white bg-brand-primary px-2.5 py-1 rounded cursor-pointer hover:bg-brand-800"
+                      >
+                        Tìm
+                      </button>
                     </div>
-                  </div>
+                  </form>
                 )}
               </div>
 
@@ -263,48 +339,53 @@ export default function Header() {
             <Link 
               to="/" 
               className="flex items-center gap-2 px-3 py-2 rounded-lg font-semibold text-sm hover:bg-white/10"
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={(e) => handleHomeOrHashClick(e)}
             >
               <img src={homeIcon} alt="" className="w-4 h-4 brightness-0 invert" /> TRANG CHỦ
             </Link>
 
-            {navLinks.map((item, index) => (
-              <div key={index} className="space-y-1">
-                <a
-                  href={item.href}
-                  className="block px-3 py-2 rounded-lg font-semibold text-xs tracking-wider hover:bg-white/10"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {item.name}
-                </a>
-                {item.hasDropdown && (
-                  <div className="pl-6 space-y-1 border-l-2 border-purple-400/40 ml-3">
-                    {item.subItems.map((sub, sIdx) => (
-                      <a
-                        key={sIdx}
-                        href="#dich-vu"
-                        className="block py-1 text-xs text-purple-200 hover:text-white"
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        • {sub}
-                      </a>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
+            {navLinks.map((item, index) => {
+              const hashId = item.to.includes('#') ? item.to.split('#')[1] : null;
+              return (
+                <div key={index} className="space-y-1">
+                  <Link
+                    to={item.to}
+                    className="block px-3 py-2 rounded-lg font-semibold text-xs tracking-wider hover:bg-white/10"
+                    onClick={(e) => handleHomeOrHashClick(e, hashId)}
+                  >
+                    {item.name}
+                  </Link>
+                  {item.hasDropdown && categories.length > 0 && (
+                    <div className="pl-6 space-y-1 border-l-2 border-purple-400/40 ml-3">
+                      {categories.map((cat) => (
+                        <Link
+                          key={cat.id}
+                          to={`/?categoryId=${cat.id}#dich-vu`}
+                          className="block py-1 text-xs text-purple-200 hover:text-white"
+                          onClick={(e) => handleHomeOrHashClick(e, 'dich-vu', true)}
+                        >
+                          • {cat.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
 
             {/* Ô tìm kiếm trên mobile */}
-            <div className="pt-2">
+            <form onSubmit={handleSearchSubmit} className="pt-2">
               <div className="flex items-center gap-2 bg-purple-900/60 border border-purple-700 rounded-lg px-3 py-2">
                 <img src={searchIcon} alt="" className="w-4 h-4 brightness-0 invert opacity-70" />
                 <input 
                   type="text" 
+                  value={searchText}
+                  onChange={(e) => setSearchText(e.target.value)}
                   placeholder="Tìm kiếm dịch vụ in..."
                   className="bg-transparent text-xs text-white placeholder-purple-300 outline-none w-full"
                 />
               </div>
-            </div>
+            </form>
           </div>
         )}
 

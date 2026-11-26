@@ -64,56 +64,58 @@ export default function NewsListPage() {
             {articles.map((item) => (
               <article 
                 key={item.id}
-                className="group bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
+                className="group bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:shadow-lg transition-all duration-300"
               >
-                <div>
-                  {/* Ảnh bài viết */}
-                  <div className="relative w-full aspect-[16/10] overflow-hidden bg-gray-50">
-                    <img 
-                      src={item.image} 
-                      alt={item.title} 
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      loading="lazy"
-                    />
-                    {item.isFeatured && (
-                      <span className="absolute top-3 left-3 bg-brand-primary text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full shadow-xs">
-                        Nổi bật
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Nội dung tóm tắt */}
-                  <div className="p-5">
-                    <div className="flex items-center gap-3 text-[11px] text-gray-400 mb-2">
-                      <span className="flex items-center gap-1">
-                        <Calendar className="w-3 h-3" /> {item.createdAt}
-                      </span>
-                      {item.views > 0 && (
-                        <span className="flex items-center gap-1">
-                          <Eye className="w-3 h-3" /> {item.views}
+                <Link
+                  to={`/tin-tuc/${item.id}`}
+                  className="flex flex-col justify-between h-full focus:outline-none"
+                >
+                  <div>
+                    {/* Ảnh bài viết */}
+                    <div className="relative w-full aspect-[16/10] overflow-hidden bg-gray-50">
+                      <img 
+                        src={item.image} 
+                        alt={item.title} 
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                      {item.isFeatured && (
+                        <span className="absolute top-3 left-3 bg-brand-primary text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full shadow-xs">
+                          Nổi bật
                         </span>
                       )}
                     </div>
 
-                    <h2 className="text-sm font-bold text-gray-900 group-hover:text-brand-primary transition-colors line-clamp-2 leading-snug">
-                      {item.title}
-                    </h2>
+                    {/* Nội dung tóm tắt */}
+                    <div className="p-5">
+                      <div className="flex items-center gap-3 text-[11px] text-gray-400 mb-2">
+                        <span className="flex items-center gap-1">
+                          <Calendar className="w-3 h-3" /> {item.createdAt}
+                        </span>
+                        {item.views > 0 && (
+                          <span className="flex items-center gap-1">
+                            <Eye className="w-3 h-3" /> {item.views}
+                          </span>
+                        )}
+                      </div>
 
-                    <p className="text-xs text-gray-500 mt-2 line-clamp-3 leading-relaxed">
-                      {item.summary || item.desc}
-                    </p>
+                      <h2 className="text-sm font-bold text-gray-900 group-hover:text-brand-primary transition-colors line-clamp-2 leading-snug">
+                        {item.title}
+                      </h2>
+
+                      <p className="text-xs text-gray-500 mt-2 line-clamp-3 leading-relaxed">
+                        {item.summary || item.desc}
+                      </p>
+                    </div>
                   </div>
-                </div>
 
-                {/* Nút đọc tiếp */}
-                <div className="p-5 pt-0">
-                  <Link 
-                    to={`/tin-tuc/${item.id}`}
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-primary group-hover:translate-x-1 transition-all"
-                  >
-                    Xem chi tiết <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
+                  {/* Nút đọc tiếp */}
+                  <div className="p-5 pt-0">
+                    <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-primary group-hover:translate-x-1 transition-all">
+                      Xem chi tiết <ArrowRight className="w-3.5 h-3.5" />
+                    </span>
+                  </div>
+                </Link>
               </article>
             ))}
           </div>

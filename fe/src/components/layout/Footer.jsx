@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Facebook, Twitter, Instagram, Youtube } from 'lucide-react';
 import { getCompanyInfo } from '../../services/contentService';
+import { scrollToTargetId } from '../common/ScrollToTop';
 
 /**
  * Footer Component
@@ -11,6 +13,7 @@ import { getCompanyInfo } from '../../services/contentService';
  * - Đáy chân trang: Dải tím © 2026 In Thắng Lợi. Designed by VicoGroup. All Rights Reserved.
  */
 export default function Footer() {
+  const location = useLocation();
   const [company, setCompany] = useState(null);
 
   useEffect(() => {
@@ -21,7 +24,7 @@ export default function Footer() {
   if (!company) return null;
 
   return (
-    <footer className="w-full bg-[#f7f7f7] border-t border-gray-200 mt-20 select-none">
+    <footer id="lien-he" className="w-full bg-[#f7f7f7] border-t border-gray-200 mt-20 select-none">
       
       {/* KHUNG NỘI DUNG CHÍNH (4 CỘT) */}
       <div className="w-full max-w-[1140px] mx-auto px-4 py-12">
@@ -41,15 +44,16 @@ export default function Footer() {
             </div>
 
             {/* 2 dòng tên công ty màu tím in hoa */}
-            <div className="mt-3 text-brand-primary font-bold text-xs tracking-wider leading-tight uppercase">
-              <div>CÔNG TY CP TM VÀ DV</div>
-              <div className="mt-0.5">IN ẤN THẮNG LỢI</div>
+            <div className="mt-3 text-brand-primary font-bold text-xs tracking-wider leading-tight uppercase max-w-[200px]">
+              {company.name}
             </div>
 
             {/* Khung ô chữ nhật 4 mạng xã hội liền nhau [ f | t | in | yt ] */}
             <div className="mt-5 inline-flex border border-gray-300 rounded-[1px] bg-white shadow-2xs">
               <a 
-                href="#facebook" 
+                href={company.facebookUrl || "#facebook"} 
+                target={company.facebookUrl ? "_blank" : undefined}
+                rel={company.facebookUrl ? "noreferrer" : undefined}
                 className="w-9 h-8 border-r border-gray-300 flex items-center justify-center text-brand-primary hover:bg-gray-50 transition-colors"
                 aria-label="Facebook"
               >
@@ -70,7 +74,9 @@ export default function Footer() {
                 <Instagram className="w-3.5 h-3.5" />
               </a>
               <a 
-                href="#youtube" 
+                href={company.youtubeUrl || "#youtube"} 
+                target={company.youtubeUrl ? "_blank" : undefined}
+                rel={company.youtubeUrl ? "noreferrer" : undefined}
                 className="w-9 h-8 flex items-center justify-center text-brand-primary hover:bg-gray-50 transition-colors"
                 aria-label="YouTube"
               >
@@ -113,13 +119,22 @@ export default function Footer() {
             <div className="w-9 h-[2px] bg-[#f59e0b] mt-1.5 mb-4 rounded-full" />
 
             <ul className="text-xs text-[#333333] space-y-2.5 list-none p-0 m-0">
-              {company.quickLinks.map((item, index) => (
-                <li key={index}>
-                  <a href={item.href} className="hover:text-brand-primary transition-colors">
-                    {item.label}
-                  </a>
-                </li>
-              ))}
+              {company.quickLinks.map((item, index) => {
+                const hashId = item.href.includes('#') ? item.href.split('#')[1] : null;
+                return (
+                  <li key={index}>
+                    <Link
+                      to={item.href}
+                      onClick={() => {
+                        if (location.pathname === '/' && hashId) scrollToTargetId(hashId);
+                      }}
+                      className="hover:text-brand-primary transition-colors"
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 

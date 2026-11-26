@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import factoryImg from '../../assets/about-factory.png';
 import patternImg from '../../assets/about-pattern.png';
 import watermarkImg from '../../assets/section-watermark.png';
@@ -26,7 +27,7 @@ export default function AboutSection() {
     <section 
       id="gioi-thieu"
       aria-label="Giới thiệu xưởng in Thắng Lợi"
-      className="w-full max-w-[1060px] mx-auto px-4 mt-14 lg:mt-16 select-none"
+      className="w-full max-w-[1060px] mx-auto px-4 mt-14 lg:mt-16 select-none scroll-mt-[180px]"
     >
       <div className="flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-14">
         
@@ -96,12 +97,12 @@ export default function AboutSection() {
 
           {/* 4. NÚT KÊU GỌI HÀNH ĐỘNG: XEM THÊM */}
           <div className="mt-7">
-            <a
-              href="#xem-them"
+            <Link
+              to="/gioi-thieu"
               className="inline-flex items-center justify-center px-7 py-2 rounded-full bg-brand-primary text-white text-xs font-medium tracking-wider hover:bg-brand-800 hover:shadow-md transition-all duration-200 focus:outline-none"
             >
               Xem thêm
-            </a>
+            </Link>
           </div>
 
         </div>

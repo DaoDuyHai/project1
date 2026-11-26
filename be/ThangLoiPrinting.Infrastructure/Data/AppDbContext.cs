@@ -14,6 +14,10 @@ public class AppDbContext : DbContext
     public DbSet<News> News => Set<News>();
     public DbSet<Testimonial> Testimonials => Set<Testimonial>();
     public DbSet<Quote> Quotes => Set<Quote>();
+    public DbSet<Client> Clients => Set<Client>();
+    public DbSet<CompanyInfo> CompanyInfo => Set<CompanyInfo>();
+    public DbSet<Machine> Machines => Set<Machine>();
+    public DbSet<User> Users => Set<User>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -73,6 +77,61 @@ public class AppDbContext : DbContext
                   .HasForeignKey(q => q.ProductId)
                   .HasConstraintName("FK_Quotes_Products")
                   .OnDelete(DeleteBehavior.SetNull);
+
+            entity.HasOne(q => q.HandledByUser)
+                  .WithMany()
+                  .HasForeignKey(q => q.HandledByUserId)
+                  .HasConstraintName("FK_Quotes_Users_HandledBy")
+                  .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        modelBuilder.Entity<Client>(entity =>
+        {
+            entity.Property(c => c.Name).HasMaxLength(200).IsRequired();
+            entity.Property(c => c.LogoUrl).HasMaxLength(500).IsRequired();
+            entity.Property(c => c.WebsiteUrl).HasMaxLength(500);
+            entity.Property(c => c.DisplayOrder).HasDefaultValue(0);
+            entity.Property(c => c.IsActive).HasSentinel(false).HasDefaultValue(true);
+            entity.Property(c => c.CreatedAt).HasDefaultValueSql("getutcdate()");
+        });
+
+        modelBuilder.Entity<CompanyInfo>(entity =>
+        {
+            entity.ToTable("CompanyInfo");
+            entity.Property(ci => ci.CompanyName).HasMaxLength(300).IsRequired();
+            entity.Property(ci => ci.ShortName).HasMaxLength(100).IsRequired();
+            entity.Property(ci => ci.Slogan).HasMaxLength(250).IsRequired();
+            entity.Property(ci => ci.Address).HasMaxLength(500).IsRequired();
+            entity.Property(ci => ci.Hotline).HasMaxLength(50).IsRequired();
+            entity.Property(ci => ci.Email).HasMaxLength(200).IsRequired();
+            entity.Property(ci => ci.FacebookUrl).HasMaxLength(500);
+            entity.Property(ci => ci.YoutubeUrl).HasMaxLength(500);
+            entity.Property(ci => ci.Copyright).HasMaxLength(300).IsRequired();
+            entity.Property(ci => ci.UpdatedAt).HasDefaultValueSql("getutcdate()");
+        });
+
+        modelBuilder.Entity<Machine>(entity =>
+        {
+            entity.Property(m => m.Name).HasMaxLength(250).IsRequired();
+            entity.Property(m => m.ModelCode).HasMaxLength(100);
+            entity.Property(m => m.Brand).HasMaxLength(150);
+            entity.Property(m => m.Origin).HasMaxLength(100);
+            entity.Property(m => m.CategoryTag).HasMaxLength(100).HasDefaultValue("In Offset");
+            entity.Property(m => m.ImageUrl).HasMaxLength(500);
+            entity.Property(m => m.DisplayOrder).HasDefaultValue(0);
+            entity.Property(m => m.IsActive).HasSentinel(false).HasDefaultValue(true);
+            entity.Property(m => m.CreatedAt).HasDefaultValueSql("getutcdate()");
+        });
+
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.Property(u => u.Username).HasMaxLength(100).IsRequired();
+            entity.HasIndex(u => u.Username).IsUnique();
+            entity.Property(u => u.PasswordHash).HasMaxLength(500).IsRequired();
+            entity.Property(u => u.FullName).HasMaxLength(200).IsRequired();
+            entity.Property(u => u.Role).HasMaxLength(50).HasDefaultValue("Staff");
+            entity.Property(u => u.IsActive).HasSentinel(false).HasDefaultValue(true);
+            entity.Property(u => u.CreatedAt).HasDefaultValueSql("getutcdate()");
         });
     }
 }

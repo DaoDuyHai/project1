@@ -22,9 +22,9 @@ export default function CategoryTabs({
   const categoryList = tabs && tabs.length > 0 ? tabs : defaultCategories;
 
   return (
-    <div className="w-full bg-brand-primary h-[48px] flex items-center justify-center select-none shadow-sm overflow-hidden">
-      <div className="w-full max-w-[1302px] h-[22px] px-4 lg:px-0 flex items-center justify-between">
-        <div className="flex items-center gap-[36px] lg:gap-[49px] w-full justify-between overflow-x-auto no-scrollbar">
+    <div className="w-full bg-brand-primary h-[48px] flex items-center justify-center select-none shadow-sm">
+      <div className="w-full max-w-[1302px] h-full px-4 lg:px-0 flex items-center">
+        <div className="flex items-center gap-3 lg:gap-5 w-full h-full justify-between overflow-x-auto no-scrollbar">
           {categoryList.map((tab, idx) => {
             const tabId = typeof tab === 'object' ? tab.id : tab;
             const tabName = typeof tab === 'object' ? tab.name : tab;
@@ -35,18 +35,13 @@ export default function CategoryTabs({
                 key={tabId || idx}
                 type="button"
                 onClick={() => onSelectTab(tabId)}
-                className={`relative text-[13px] font-semibold tracking-wider whitespace-nowrap transition-all duration-200 focus:outline-none ${
-                  isActive 
-                    ? "text-white font-bold drop-shadow-sm" 
-                    : "text-white/85 hover:text-white"
+                className={`relative px-4 py-1.5 rounded-full text-[13px] font-semibold tracking-wide whitespace-nowrap transition-all duration-200 cursor-pointer focus:outline-none ${
+                  isActive
+                    ? "bg-white text-brand-primary shadow-sm scale-[1.02]"
+                    : "text-white/90 hover:text-white hover:bg-white/15"
                 }`}
               >
                 {tabName}
-                
-                {/* Đường gạch chân khi tab active */}
-                {isActive && (
-                  <span className="absolute -bottom-1.5 left-0 right-0 h-[2px] bg-white rounded-full animate-in fade-in duration-200" />
-                )}
               </button>
             );
           })}

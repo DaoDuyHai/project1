@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Star, Info, ArrowRight, Phone, Send } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Star, Info, Phone, Send } from 'lucide-react';
 import QuoteModal from './QuoteModal';
 
 /**
@@ -24,7 +25,7 @@ export default function ProductInfo({ product }) {
     priceGuideText = "Quý khách xem bảng giá chi tiết dưới đây",
     priceLinks = [],
     specs = [],
-    hotline = "0123 456 789",
+    hotline = "091 8585 505",
     perks = [],
   } = product;
 
@@ -72,14 +73,14 @@ export default function ProductInfo({ product }) {
         </p>
         <div className="space-y-1 pl-5">
           {priceLinks.map((link, idx) => (
-            <a 
+            <Link 
               key={idx}
-              href={link.href}
+              to={link.href || "/bang-gia"}
               className="flex items-center gap-1 text-xs font-semibold text-[#0284c7] hover:underline"
             >
               <span>&rarr;</span>
               <span>{link.label}</span>
-            </a>
+            </Link>
           ))}
         </div>
       </div>

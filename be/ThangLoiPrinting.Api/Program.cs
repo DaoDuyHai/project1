@@ -25,9 +25,10 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Tự động tạo Database và áp dụng toàn bộ EF Core Migrations khi khởi động (chuẩn cho máy mới)
-using (var scope = app.Services.CreateScope())
+// Tự động tạo Database và áp dụng toàn bộ EF Core Migrations khi khởi động (bỏ qua khi chạy Integration Test)
+if (!app.Environment.IsEnvironment("Testing"))
 {
+    using var scope = app.Services.CreateScope();
     var services = scope.ServiceProvider;
     try
     {
@@ -48,7 +49,9 @@ app.UseMiddleware<ExceptionMiddleware>();
 app.UseStaticFiles();
 
 app.UseCors("AllowFrontend");
+app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<AdminAuthorizationMiddleware>();
 app.MapControllers();
 
 // Endpoint 1: Hello Server
@@ -80,3 +83,5 @@ app.MapGet("/api/test-error", () =>
 });
 
 app.Run();
+
+public partial class Program { }

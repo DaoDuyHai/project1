@@ -14,7 +14,16 @@ export default function TestimonialsSection() {
     getTestimonials().then(data => setTestimonials(data));
   }, []);
 
-  if (testimonials.length === 0) return null;
+  if (testimonials.length === 0) {
+    return (
+      <section
+        aria-label="Khách hàng nói về chúng tôi"
+        className="w-full bg-[#532470] text-white py-16 lg:py-20 mt-20 min-h-[480px] flex items-center justify-center"
+      >
+        <div className="w-10 h-10 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+      </section>
+    );
+  }
 
   const current = testimonials[currentSlide % testimonials.length];
 

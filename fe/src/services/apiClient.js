@@ -5,42 +5,41 @@
 
 export const API_BASE_URL = 'http://localhost:5234';
 
-const SIMULATED_DELAY_MS = 100;
-
 /**
- * Hàm giả lập cho các service chưa nối API (content, news...)
- */
-export async function simulatedFetch(dataGetter) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        data: dataGetter(),
-        status: 200,
-        message: "Success",
-      });
-    }, SIMULATED_DELAY_MS);
-  });
-}
-
-/**
- * Hàm gọi API tổng quát dùng fetch
+ * Hàm gọi API tổng quát dùng fetch (tự động đính kèm JWT Bearer Token nếu có)
  */
 export async function request(endpoint, options = {}) {
   const url = endpoint.startsWith('http') ? endpoint : `${API_BASE_URL}${endpoint}`;
-  
+  const token = localStorage.getItem('tl_admin_token');
+  const isFormData = options.body instanceof FormData;
+
   const response = await fetch(url, {
+    ...options,
     headers: {
-      'Content-Type': 'application/json',
+      ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...options.headers,
     },
-    ...options,
   });
 
-  if (!response.ok) {
-    throw new Error(`API Error: ${response.status} ${response.statusText}`);
+  let payload = null;
+  try {
+    payload = await response.json();
+  } catch {
+    payload = null;
   }
 
-  return await response.json();
+  if (!response.ok) {
+    if (response.status === 401) {
+      localStorage.removeItem('tl_admin_token');
+      localStorage.removeItem('tl_admin_user');
+    }
+    const err = new Error(payload?.message || `API Error: ${response.status} ${response.statusText}`);
+    err.status = response.status;
+    throw err;
+  }
+
+  return payload;
 }
 
 /**
