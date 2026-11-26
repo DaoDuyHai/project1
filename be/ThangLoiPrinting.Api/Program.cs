@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using ThangLoiPrinting.Api.Middlewares;
 using ThangLoiPrinting.Infrastructure;
 using ThangLoiPrinting.Infrastructure.Data;
@@ -24,6 +25,22 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// Tự động tạo Database và áp dụng toàn bộ EF Core Migrations khi khởi động (chuẩn cho máy mới)
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var dbContext = services.GetRequiredService<AppDbContext>();
+        await dbContext.Database.MigrateAsync();
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Lỗi khi chạy Migration tự động lúc khởi động ứng dụng.");
+    }
+}
+
 // 4. Đăng ký Middleware xử lý lỗi tập trung ở đầu Pipeline (bọc toàn bộ ứng dụng)
 app.UseMiddleware<ExceptionMiddleware>();
 
@@ -45,8 +62,6 @@ app.MapGet("/", () => Results.Ok(new
 // Endpoint 2: Kiểm tra kết nối trực tiếp tới SQL Server trên Docker
 app.MapGet("/api/health/db", async (AppDbContext dbContext) =>
 {
-    // Tự động đảm bảo Database và các Bảng đã tồn tại nếu chưa có
-    await dbContext.Database.EnsureCreatedAsync();
     bool canConnect = await dbContext.Database.CanConnectAsync();
 
     return Results.Ok(new
